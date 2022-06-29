@@ -9,6 +9,7 @@ if len(sys.argv) < 2:
 
 # set file variables from the OSS and Kibana reports for manipulation
 kibana_file = sys.argv[1]
+
 # oss_file = sys.argv[2]
 kibana_mac = []
 
@@ -25,4 +26,9 @@ with open(kibana_file) as csv_file:
 with open('/Users/nathancashman/Documents/testing.csv', mode='w', newline='') as outfile:
     outfile_writer = csv.writer(outfile)
     for item in kibana_mac:
+            kibana_mac.append(row[0])
+
+with open('/Users/nathancashman/Documents/testing.csv', mode='w', newline='') as outfile:
+    outfile_writer = csv.writer(outfile)
+    for item in kibana_file:
         outfile_writer.writerow([item])
