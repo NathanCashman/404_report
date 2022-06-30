@@ -30,18 +30,18 @@ with open(oss_file) as oss_file_csv:
     i = 0
     for row in odata:
         if lineCount == 0:
-            combined_data.append(row)
+            lineCount += 1
         else:
             combined_data.append([row[0], row[1], row[2], row[3], row[4], row[5], kibana_mac[i]])
+            lineCount += 1
             i += 1
 
-# write to the new file
-# with open('/Users/nathancashman/Documents/testing.csv', mode='w', newline='') as outfile:
-#     outfile_writer = csv.writer(outfile)
-#     for item in kibana_mac:
-#         outfile_writer.writerow([item])
-
+# create new file and write required data to it
 with open('/Users/nathancashman/Documents/testing.csv', mode='w', newline='') as outfile:
     outfile_writer = csv.writer(outfile)
+    outfile_writer.writerow(['Mac', 'DeviceProfileType', 'Company', 'Company enddate', 'defaultdomain', 'ServerName',
+                             'LinePort', 'Device enddate', 'Completed', 'Batch Number', 'Error'])
     for item in combined_data:
-        outfile_writer.writerow([item])
+        outfile_writer.writerow(item)
+
+print(f'{lineCount} lines processed.')
