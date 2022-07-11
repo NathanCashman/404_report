@@ -1,5 +1,6 @@
 import csv
 import sys
+import operator
 
 # Check that two files have been provided, otherwise print guide on usage and exit
 if len(sys.argv) < 3:
@@ -16,12 +17,13 @@ combined_data = []
 # pull the lineport from the kibana file as we want to preserve this to replace the one provided in OSS' report
 with open(kibana_file) as csv_file:
     data = csv.reader(csv_file, delimiter=',')
+    sorted_data = sorted(data, key=operator.itemgetter(4), reverse=True)
     lineCount = 0
-    for row in data:
+    for row in sorted_data:
         if lineCount == 0:
             lineCount += 1
         else:
-            kibana_mac.append(row[6])
+            kibana_mac.append(row[1])
 
 # pull required data from the OSS file and combine this with the lineport from kibana that we gathered earlier
 with open(oss_file) as oss_file_csv:
@@ -32,16 +34,18 @@ with open(oss_file) as oss_file_csv:
         if lineCount == 0:
             lineCount += 1
         else:
-            combined_data.append([row[0], row[1], row[2], row[3], row[4], row[5], kibana_mac[i]])
+            combined_data.append([row[0], row[1], row[2], row[3], row[4], row[5], kibana_mac[i], row[7]])
             lineCount += 1
             i += 1
 
 # create new file and write required data to it
-with open('/Users/nathancashman/Documents/testing.csv', mode='w', newline='') as outfile:
+with open('/home/ncashman/testing.csv', mode='w', newline='') as outfile:
     outfile_writer = csv.writer(outfile)
     outfile_writer.writerow(['Mac', 'DeviceProfileType', 'Company', 'Company enddate', 'defaultdomain', 'ServerName',
                              'LinePort', 'Device enddate', 'Completed', 'Batch Number', 'Error'])
     for item in combined_data:
+        if not combined_data[7] == 'NULL':
+            continue
         outfile_writer.writerow(item)
 
 print(f'{lineCount} lines processed.')
